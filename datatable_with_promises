@@ -1,0 +1,82 @@
+debugger;
+
+searchConfig = (typeof searchConfig === 'undefined') ? {} : searchConfig;
+
+searchConfig.personTable = {
+    resource: {
+//         name: 'ServiceNow CIs - All'
+        name: 'test',
+    },
+    resultsContainer: '<table cellspacing="0", border="0", class="table table-striped table-bordered table-condensed dataTable">',
+    data: [{
+        title: 'Asset Id',
+        name: 'Asset Id',
+    },{
+        title: 'Asset Name',
+        name: 'Asset Name',
+    }],
+    resultsContainerId: 'ci-table',
+    before: function(configObj) {},
+    error: function(configObj) {},
+    complete: function(configObj) {},
+    removeOnClick: false,
+    renderer: {
+        type: DataViewer.Renderers.DataTables, // Passing a function here allows for better customization
+        options: {
+            // Options for Render
+            processSingleResult: false,
+            // DataTable OPTIONS; Passing options here make it clear that they are being passed to data tables
+            // responsive: OPTIONAL Default for "BridgeDataTable" is true but can be over written.
+            responsive: false,
+            dom: 'tip',
+//             order: [
+//                 [3, 'asc']
+//             ],
+            paging: false,
+            scrollY: '60vh',
+            scrollCollapse: true,
+            select: {
+                style: 'single',
+                selector: 'td:first-child'
+            },
+            createdRow: function createdRow(row, data, dataIndex) {},
+            deferRender: true,
+        }
+    }
+};
+
+(function() {
+  (async function() {
+    try {
+      let data = await new Promise(function(resolve, reject) {
+        K('bridgedResource[SNOW User Assets]').load({
+          success: function(response) {
+            resolve(response);
+          },
+          error: function(response) {debugger;}
+        });
+      });
+
+      data = await new Promise(function(resolve, reject) {
+        K('bridgedResource[ARS User Assets]').load({
+          success: function(response) {
+            resolve([...response, ...data]);
+          },
+          error: function(response) {debugger;}
+        });
+      });
+
+      K('bridgedResource[Helix User Assets]').load({
+        success: function(response) {
+          let mergedResponse = [...response, ...data];
+          searchConfig.personTable.response = mergedResponse;
+          DataViewer.renderResults($(K('section[CI Table Section]').element()), searchConfig.personTable);
+        },
+        error: function(response) {debugger;}
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  })();
+
+})();
