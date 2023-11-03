@@ -2,11 +2,8 @@ debugger;
 
 searchConfig = (typeof searchConfig === 'undefined') ? {} : searchConfig;
 
-searchConfig.personTable = {
-    resource: {
-//         name: 'ServiceNow CIs - All'
-        name: 'test',
-    },
+searchConfig.assetTable = {
+resource: {/*not used*/},
     resultsContainer: '<table cellspacing="0", border="0", class="table table-striped table-bordered table-condensed dataTable">',
     data: [{
         title: 'Asset Id',
@@ -25,13 +22,12 @@ searchConfig.personTable = {
         options: {
             // Options for Render
             processSingleResult: false,
-            // DataTable OPTIONS; Passing options here make it clear that they are being passed to data tables
             // responsive: OPTIONAL Default for "BridgeDataTable" is true but can be over written.
             responsive: false,
             dom: 'tip',
-//             order: [
-//                 [3, 'asc']
-//             ],
+            /*order: [
+               [3, 'asc']
+            ],*/
             paging: false,
             scrollY: '60vh',
             scrollCollapse: true,
@@ -53,7 +49,7 @@ searchConfig.personTable = {
           success: function(response) {
             resolve(response);
           },
-          error: function(response) {debugger;}
+          error: function(response) {alert(`There was an error with the ${response.name()} Bridged Resource.`);}
         });
       });
 
@@ -62,20 +58,20 @@ searchConfig.personTable = {
           success: function(response) {
             resolve([...response, ...data]);
           },
-          error: function(response) {debugger;}
+          error: function(response) {alert(`There was an error with the ${response.name()} Bridged Resource.`);}
         });
       });
 
       K('bridgedResource[Helix User Assets]').load({
         success: function(response) {
           let mergedResponse = [...response, ...data];
-          searchConfig.personTable.response = mergedResponse;
-          DataViewer.renderResults($(K('section[CI Table Section]').element()), searchConfig.personTable);
+          searchConfig.assetTable.response = mergedResponse;
+          DataViewer.renderResults($(K('section[CI Table Section]').element()), searchConfig.assetTable);
         },
-        error: function(response) {debugger;}
-      });
+        error: function(response) {alert(`There was an error with the ${response.name()} Bridged Resource.`);}
+    });
     } catch (error) {
-      console.error(error);
+      alert(`There was an error with one of the Bridged Resources.`);
     }
   })();
 
