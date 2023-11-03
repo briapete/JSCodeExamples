@@ -1,7 +1,7 @@
 debugger;
 
+// Configure the DataViewer
 searchConfig = (typeof searchConfig === 'undefined') ? {} : searchConfig;
-
 searchConfig.assetTable = {
   resource: {/*not used*/ },
   resultsContainer: '<table cellspacing="0", border="0", class="table table-striped table-bordered table-condensed dataTable">',
@@ -18,7 +18,7 @@ searchConfig.assetTable = {
   complete: function (configObj) { },
   removeOnClick: false,
   renderer: {
-    type: DataViewer.Renderers.DataTables, // Passing a function here allows for better customization
+    type: DataViewer.Renderers.DataTables, 
     options: {
       // Options for Render
       processSingleResult: false,
@@ -49,7 +49,7 @@ searchConfig.assetTable = {
           success: function (response) {
             resolve(response);
           },
-          error: function (response) { alert(`There was an error with the ${response.name()} Bridged Resource.`); }
+          error: function (response) { reject(`There was an error with the ${response.name()} Bridged Resource.`); }
         });
       });
 
@@ -58,7 +58,7 @@ searchConfig.assetTable = {
           success: function (response) {
             resolve([...response, ...data]);
           },
-          error: function (response) { alert(`There was an error with the ${response.name()} Bridged Resource.`); }
+          error: function (response) { reject(`There was an error with the ${response.name()} Bridged Resource.`); }
         });
       });
 
@@ -68,10 +68,12 @@ searchConfig.assetTable = {
           searchConfig.assetTable.response = mergedResponse;
           DataViewer.renderResults($(K('section[CI Table Section]').element()), searchConfig.assetTable);
         },
-        error: function (response) { alert(`There was an error with the ${response.name()} Bridged Resource.`); }
+        error: function (response) { reject(`There was an error with the ${response.name()} Bridged Resource.`); }
       });
     } catch (error) {
-      alert(`There was an error with one of the Bridged Resources.`);
+      searchConfig.assetTable.response = [];
+      DataViewer.renderResults($(K('section[CI Table Section]').element()), searchConfig.assetTable);
+      alert(error);
     }
   })();
 })();
