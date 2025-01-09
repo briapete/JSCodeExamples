@@ -1,0 +1,219 @@
+{
+  "form": {
+    "anonymous": false,
+    "attributes": [
+      {
+        "name": "Approvers",
+        "values": [
+          "Executive Team"
+        ]
+      },
+      {
+        "name": "Icon",
+        "values": [
+          "<i class=\"fa fa-lightbulb\"></i>"
+        ]
+      }
+    ],
+    "bridgedResources": [],
+    "categorizations": [],
+    "customHeadContent": null,
+    "description": "",
+    "indexDefinitions": [
+      {
+        "name": "closedBy",
+        "parts": [
+          "closedBy"
+        ],
+        "unique": false
+      },
+      {
+        "name": "createdBy",
+        "parts": [
+          "createdBy"
+        ],
+        "unique": false
+      },
+      {
+        "name": "handle",
+        "parts": [
+          "handle"
+        ],
+        "unique": false
+      },
+      {
+        "name": "submittedBy",
+        "parts": [
+          "submittedBy"
+        ],
+        "unique": false
+      },
+      {
+        "name": "updatedBy",
+        "parts": [
+          "updatedBy"
+        ],
+        "unique": false
+      }
+    ],
+    "integrations": [],
+    "name": "_Format USD Example",
+    "notes": null,
+    "pages": [
+      {
+        "advanceCondition": null,
+        "displayCondition": null,
+        "displayPage": null,
+        "elements": [
+          {
+            "type": "section",
+            "renderType": null,
+            "name": "Details",
+            "title": "Details",
+            "visible": true,
+            "omitWhenHidden": null,
+            "renderAttributes": {},
+            "elements": [
+              {
+                "type": "section",
+                "renderType": null,
+                "name": "Item Details Section",
+                "title": null,
+                "visible": true,
+                "omitWhenHidden": null,
+                "renderAttributes": {
+                  "class": "cols-2"
+                },
+                "elements": [
+                  {
+                    "enabled": true,
+                    "dataType": "string",
+                    "defaultDataSource": "none",
+                    "requiredMessage": null,
+                    "name": "Expense Type",
+                    "choicesResourceName": null,
+                    "omitWhenHidden": null,
+                    "renderAttributes": {},
+                    "renderType": "dropdown",
+                    "pattern": null,
+                    "defaultValue": null,
+                    "visible": true,
+                    "choices": [
+                      {
+                        "label": "Office supplies",
+                        "value": "Office supplies"
+                      },
+                      {
+                        "label": "Travel expenses",
+                        "value": "Travel expenses"
+                      },
+                      {
+                        "label": "Repairs and maintenance",
+                        "value": "Repairs and maintenance"
+                      },
+                      {
+                        "label": "Education",
+                        "value": "Education"
+                      },
+                      {
+                        "label": "Dues and subscriptions",
+                        "value": "Dues and subscriptions"
+                      }
+                    ],
+                    "label": "Expense Type",
+                    "choicesResourceProperty": null,
+                    "choicesRunIf": null,
+                    "constraints": [],
+                    "choicesDataSource": "custom",
+                    "events": [],
+                    "defaultResourceName": null,
+                    "type": "field",
+                    "key": "cebdbb7180d94503834d102157fda952",
+                    "required": false
+                  },
+                  {
+                    "enabled": true,
+                    "dataType": "string",
+                    "defaultDataSource": "none",
+                    "requiredMessage": null,
+                    "name": "Amount",
+                    "omitWhenHidden": null,
+                    "renderAttributes": {},
+                    "renderType": "text",
+                    "pattern": null,
+                    "defaultValue": "${\"$\"}",
+                    "visible": true,
+                    "label": "Amount",
+                    "constraints": [],
+                    "events": [
+                      {
+                        "name": "Format Dollar Value",
+                        "code": "// Set the value to value formatted for dollars using the 'formatUSD' function.\nelement.value(formatUSD(element.value()));",
+                        "integrationResourceName": null,
+                        "action": "Custom",
+                        "integrationResourceProperty": "",
+                        "type": "Change"
+                      }
+                    ],
+                    "rows": 1,
+                    "defaultResourceName": null,
+                    "type": "field",
+                    "key": "1db44221b6af454eb41de1527f9c3dc9",
+                    "required": true
+                  },
+                  {
+                    "enabled": true,
+                    "dataType": "string",
+                    "defaultDataSource": "none",
+                    "requiredMessage": null,
+                    "name": "Date of Expense",
+                    "omitWhenHidden": null,
+                    "renderAttributes": {},
+                    "renderType": "date",
+                    "pattern": null,
+                    "defaultValue": null,
+                    "visible": true,
+                    "label": "Date of Expense",
+                    "constraints": [],
+                    "events": [],
+                    "defaultResourceName": null,
+                    "type": "field",
+                    "key": "03cb1263f0fe417d9c1ab5e32be35f58",
+                    "required": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "visible": true,
+            "renderAttributes": {},
+            "name": "Submit Button",
+            "label": "Submit",
+            "type": "button",
+            "renderType": "submit-page",
+            "enabled": true
+          }
+        ],
+        "events": [
+          {
+            "name": "Initialize formatUSD",
+            "code": "formatUSD = function(value) {\n  // Remove any non-digit characters except decimal point\n  const cleanValue = value.replace(/[^\\d.]/g, '');\n  \n  // Convert to number and format with 2 decimal places\n  const amount = Number(cleanValue);\n  \n  // Return formatted string with $ symbol and commas\n  return new Intl.NumberFormat('en-US', {\n    style: 'currency',\n    currency: 'USD'\n  }).format(amount);\n}",
+            "integrationResourceName": null,
+            "action": "Custom",
+            "integrationResourceProperty": "",
+            "type": "Load"
+          }
+        ],
+        "name": "Page 1",
+        "renderType": "submittable",
+        "type": "page"
+      }
+    ],
+    "securityPolicies": [],
+    "slug": "format-usd-example",
+    "status": "Active",
+    "submissionLabelExpression": "${form('name')} request for ${values('Requested for Display Name')}",
+    "type": "Service"
+  }
+}

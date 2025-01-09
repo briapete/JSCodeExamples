@@ -49,16 +49,20 @@ searchConfig.assetTable = {
           success: function (response) {
             resolve(response);
           },
-          error: function (response) { reject(`There was an error with the ${response.name()} Bridged Resource.`); }
+          error: function (response) {
+            reject(`There was an error with the Bridged Resource: ${response.name()}`);
+          }
         });
       });
 
       data = await new Promise(function (resolve, reject) {
-        K('bridgedResource[ARS User Assets]').load({
+        api('bridgedResource[ARS User Assets]').load({
           success: function (response) {
             resolve([...response, ...data]);
           },
-          error: function (response) { reject(`There was an error with the ${response.name()} Bridged Resource.`); }
+          error: function (response) { 
+            reject(`There was an error with the ${response.name()} Bridged Resource.`); 
+          }
         });
       });
 
@@ -68,7 +72,9 @@ searchConfig.assetTable = {
           searchConfig.assetTable.response = mergedResponse;
           DataViewer.renderResults($(K('section[CI Table Section]').element()), searchConfig.assetTable);
         },
-        error: function (response) { reject(`There was an error with the ${response.name()} Bridged Resource.`); }
+        error: function (response) { 
+          reject(`There was an error with the ${response.name()} Bridged Resource.`); 
+        }
       });
     } catch (error) {
       searchConfig.assetTable.response = [];
